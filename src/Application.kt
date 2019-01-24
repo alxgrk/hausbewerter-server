@@ -1,16 +1,17 @@
 package de.alxgrk
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.routing.*
-import io.ktor.http.*
-import com.fasterxml.jackson.databind.*
-import io.ktor.jackson.*
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.SerializationFeature
+import de.alxgrk.routing.*
+import io.ktor.application.Application
+import io.ktor.application.install
 import io.ktor.features.*
-import io.ktor.http.content.CachingOptions
-import org.slf4j.event.*
-import io.ktor.util.date.*
+import io.ktor.http.HttpMethod
+import io.ktor.jackson.jackson
+import io.ktor.request.path
+import io.ktor.routing.routing
+import org.slf4j.event.Level
+import routing.questionnaire.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -21,6 +22,7 @@ fun Application.module(testing: Boolean = false) {
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
+            setSerializationInclusion(JsonInclude.Include.NON_NULL);
         }
     }
 
@@ -32,28 +34,25 @@ fun Application.module(testing: Boolean = false) {
     }
 
     install(CORS) {
-        method(HttpMethod.Options)
-        method(HttpMethod.Put)
-        method(HttpMethod.Delete)
-        method(HttpMethod.Patch)
-        header(HttpHeaders.Authorization)
-        allowCredentials = true
-        host("localhost")
+        host("localhost:8088")
         host("alxgrk.github.io")
+
+        method(HttpMethod.Put)
+
+        //header(HttpHeaders.Authorization)
+
+        //allowCredentials = true
     }
+
+    install(Compression)
 
     install(DefaultHeaders) {}
 
     routing {
-        get("/") {
-            val uri = call.request.uri
-            val headers = call.response.headers
-            call.respondText("Hello World from '$uri' with ${headers.allValues()}!", contentType = ContentType.Text.Plain)
-        }
-
-        get("/json/jackson") {
-            call.respond(mapOf("hello" to "world"))
-        }
+        root()
+        collection()
+        single()
+        questionnaire()
     }
 }
 

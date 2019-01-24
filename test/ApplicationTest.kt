@@ -1,26 +1,47 @@
 package de.alxgrk
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.routing.*
-import io.ktor.http.*
-import com.fasterxml.jackson.databind.*
-import io.ktor.jackson.*
-import io.ktor.features.*
-import org.slf4j.event.*
-import io.ktor.util.date.*
-import kotlin.test.*
-import io.ktor.server.testing.*
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.withTestApplication
+import kotlin.test.Test
 
 class ApplicationTest {
+
     @Test
     fun testRoot() {
         withTestApplication({ module(testing = true) }) {
             handleRequest(HttpMethod.Get, "/").apply {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("HELLO WORLD!", response.content)
+
+                assertThat(response.status()).isEqualTo(HttpStatusCode.OK)
+
+                assertThat(response.content).isEqualToIgnoringWhitespaces("""
+                    {
+                        "_schema": {
+                            "links": [
+                                {
+                                    "rel": "self",
+                                    "href": "/",
+                                    "method": "GET"
+                                },
+                                {
+                                    "rel": "create",
+                                    "href": "/fragebogen",
+                                    "method": "POST"
+                                },
+                                {
+                                    "rel": "get-by-id",
+                                    "href": "/fragebogen/{id}",
+                                    "method": "GET"
+                                }
+                            ]
+                        }
+                    }
+                """.trimIndent())
             }
         }
     }
+
 }
