@@ -1,8 +1,8 @@
-package models
+package models.web
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import de.alxgrk.models.schema.Rel
-import models.schema.Method
+import models.web.schema.Method
 
 data class LinkObject (
     @JsonIgnore private val relType: Rel,

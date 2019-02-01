@@ -1,4 +1,4 @@
-package models.schema;
+package models.web.schema;
 
 enum class Method {
     GET,

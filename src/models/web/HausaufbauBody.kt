@@ -1,4 +1,4 @@
-package models
+package models.web
 
 data class HausaufbauBody(
     val geschosse: Geschosse,

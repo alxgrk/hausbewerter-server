@@ -1,4 +1,4 @@
-package models
+package models.web
 
 import java.math.BigDecimal
 

@@ -1,4 +1,4 @@
-package models
+package models.web
 
 data class SachwertBody (
     val baujahr: Int,

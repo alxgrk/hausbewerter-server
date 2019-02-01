@@ -1,9 +1,12 @@
 package de.alxgrk.routing
 
 import de.alxgrk.models.schema.Rel
-import models.LinkObject
-import models.schema.Method
-import models.schema.Method.*
+import io.ktor.application.ApplicationCall
+import io.ktor.routing.*
+import io.ktor.util.pipeline.PipelineInterceptor
+import models.web.LinkObject
+import models.web.schema.Method
+import models.web.schema.Method.*
 
 val ID_KEY = "{id}"
 
@@ -11,6 +14,7 @@ enum class Routes(private val path: String, val method: Method) {
 
     ROOT("/", GET),
 
+    ALL("/fragebogen", GET),
     NEW("/fragebogen", POST),
     SINGLE("/fragebogen/$ID_KEY", GET),
 
@@ -26,8 +30,34 @@ enum class Routes(private val path: String, val method: Method) {
 
 }
 
-fun self(route: Routes, id: String = "", targetSchema: Any? = null) = LinkObject(relType = Rel.SELF, href = route.path(id), method = route.method, targetSchema = targetSchema)
+fun self(route: Routes, id: String = "", targetSchema: Any? = null) = LinkObject(
+    relType = Rel.SELF,
+    href = route.path(id),
+    method = route.method,
+    targetSchema = targetSchema
+)
 fun create() = LinkObject(relType = Rel.CREATE, href = Routes.NEW.path(), method = Routes.NEW.method)
-fun getById() = LinkObject(relType = Rel.GET_BY_ID, href = Routes.SINGLE.path(), method = Routes.SINGLE.method)
-fun next(route: Routes, id: String, targetSchema: Any? = null) = LinkObject(relType = Rel.NEXT, href = route.path(id), method = route.method, targetSchema = targetSchema)
-fun prev(route: Routes, id: String, targetSchema: Any? = null) = LinkObject(relType = Rel.PREV, href = route.path(id), method = route.method, targetSchema = targetSchema)
+fun getById() =
+    LinkObject(relType = Rel.GET_BY_ID, href = Routes.SINGLE.path(), method = Routes.SINGLE.method)
+fun next(route: Routes, id: String, targetSchema: Any? = null) = LinkObject(
+    relType = Rel.NEXT,
+    href = route.path(id),
+    method = route.method,
+    targetSchema = targetSchema
+)
+fun prev(route: Routes, id: String, targetSchema: Any? = null) = LinkObject(
+    relType = Rel.PREV,
+    href = route.path(id),
+    method = route.method,
+    targetSchema = targetSchema
+)
+
+fun Routing.route(route: Routes, id: String = "", body: PipelineInterceptor<Unit, ApplicationCall>) = when(route.method) {
+    GET -> get(route.path(id), body)
+    POST -> post(route.path(id), body)
+    PUT -> put(route.path(id), body)
+    DELETE -> delete(route.path(id), body)
+    PATCH -> patch(route.path(id), body)
+    OPTIONS -> options(route.path(id), body)
+    HEAD -> head(route.path(id), body)
+}

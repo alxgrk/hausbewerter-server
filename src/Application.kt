@@ -2,7 +2,13 @@ package de.alxgrk
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.SerializationFeature
-import de.alxgrk.routing.*
+import data.DatabaseFactory
+import de.alxgrk.data.QuestionnaireRepository
+import de.alxgrk.di.productionKodein
+import de.alxgrk.routing.collection
+import de.alxgrk.routing.questionnaire
+import de.alxgrk.routing.root
+import de.alxgrk.routing.single
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.*
@@ -10,8 +16,9 @@ import io.ktor.http.HttpMethod
 import io.ktor.jackson.jackson
 import io.ktor.request.path
 import io.ktor.routing.routing
+import org.kodein.di.Kodein
+import org.kodein.di.generic.instance
 import org.slf4j.event.Level
-import routing.questionnaire.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -19,10 +26,19 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
 
+    val kodein =
+        if (testing)
+            Kodein { /* TODO use test config */ }
+        else
+            Kodein { import(productionKodein) }
+
+    DatabaseFactory.init(kodein)
+    val qRepo by kodein.instance<QuestionnaireRepository>()
+
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
-            setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            setSerializationInclusion(JsonInclude.Include.NON_NULL)
         }
     }
 
@@ -50,8 +66,8 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
         root()
-        collection()
-        single()
+        collection(qRepo)
+        single(qRepo)
         questionnaire()
     }
 }

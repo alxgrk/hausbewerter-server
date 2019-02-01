@@ -1,20 +1,20 @@
 package routing.questionnaire
 
-import de.alxgrk.models.schema.DocumentationRef
 import de.alxgrk.models.schema.Definitions.*
+import de.alxgrk.models.schema.DocumentationRef
 import de.alxgrk.routing.Routes.*
 import de.alxgrk.routing.next
 import de.alxgrk.routing.prev
+import de.alxgrk.routing.route
 import de.alxgrk.routing.self
 import io.ktor.application.call
 import io.ktor.response.respond
 import io.ktor.routing.Routing
-import io.ktor.routing.put
-import models.schema
+import models.web.schema
 
 fun Routing.sachwert() {
 
-    put(SACHWERT.path()) {
+    route(SACHWERT) {
 
         val id = "123"
         val errechnetesBaujahr = 1978
@@ -27,11 +27,9 @@ fun Routing.sachwert() {
                 "restnutzungsdauer" to restnutzungsdauer,
                 "vorlaeufigerSachwert" to vorlaeufigerSachwert,
                 schema {
-                    listOf(
-                        self(SACHWERT, id, DocumentationRef(SACHWERT_BODY)),
-                        next(BESONDERES, id, DocumentationRef(BESONDERES_BODY)),
-                        prev(HERSTELLUNGSWERT, id, DocumentationRef(HERSTELLUNGSWERT_BODY))
-                    )
+                    add(self(SACHWERT, id, DocumentationRef(SACHWERT_BODY)))
+                    add(next(BESONDERES, id, DocumentationRef(BESONDERES_BODY)))
+                    add(prev(HERSTELLUNGSWERT, id, DocumentationRef(HERSTELLUNGSWERT_BODY)))
                 }
             )
         )

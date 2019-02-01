@@ -1,45 +1,41 @@
 package de.alxgrk.routing
 
+import de.alxgrk.data.QuestionnaireRepository
+import de.alxgrk.models.schema.Definitions.FLAECHE_BODY
 import de.alxgrk.models.schema.DocumentationRef
-import de.alxgrk.models.schema.Definitions.*
-import de.alxgrk.models.schema.schemaDefinitionsUrl
 import de.alxgrk.routing.Routes.FLAECHE
 import de.alxgrk.routing.Routes.SINGLE
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.routing.Routing
-import io.ktor.routing.get
-import io.ktor.routing.options
-import models.FlaecheBody
-import models.schema
-import java.math.BigDecimal
+import models.web.schema
+import org.jetbrains.exposed.sql.transactions.transaction
 
-fun Routing.single() {
+fun Routing.single(repo: QuestionnaireRepository) {
 
-    get(SINGLE.path()) {
+    route(SINGLE) {
 
-        val id = "123"
-        val state = FragebogenState.OFFEN
+        val idInQuestion = call.parameters["id"]
 
-        call.respond(
-            mapOf(
-                "id" to id,
-                "state" to state,
-                schema {
-                    listOf(
-                        self(SINGLE, id),
-                        next(FLAECHE, id, DocumentationRef(FLAECHE_BODY))
-                    )
-                }
+        if (idInQuestion != null) {
+
+            val qById = transaction { repo.getOne(idInQuestion.toInt()) }
+            val realId = qById.id.toString()
+
+            call.respond(
+                mapOf(
+                    "id" to realId,
+                    "name" to qById.name,
+                    "state" to qById.state,
+                    schema {
+                        add(self(SINGLE, realId))
+                        add(next(FLAECHE, realId, DocumentationRef(FLAECHE_BODY)))
+                    }
+                )
             )
-        )
-
+        } else
+            call.respond(HttpStatusCode.NotFound, "Couldn't find a questionnaire with id null.")
     }
 
-}
-
-enum class FragebogenState {
-    OFFEN,
-    ABGESCHLOSSEN
 }
