@@ -21,13 +21,6 @@ class SingleRouteTest {
 
     private val id = 123
 
-    @Before
-    fun setup() {
-        transaction {
-            Questionnaires.deleteAll()
-        }
-    }
-
     @Test
     fun testSingle() {
         withTestApplication({
@@ -35,6 +28,7 @@ class SingleRouteTest {
 
             // setup
             transaction {
+                Questionnaires.deleteAll()
                 Questionnaire.new(id) {
                     name = "test"
                     state = QuestionnaireState.OPEN
@@ -81,6 +75,11 @@ class SingleRouteTest {
 
         withTestApplication({
             module(testing = true)
+
+            // setup
+            transaction {
+                Questionnaires.deleteAll()
+            }
         }) {
             handleRequest(HttpMethod.Get, "/fragebogen/$id").apply {
 
@@ -103,6 +102,11 @@ class SingleRouteTest {
 
         withTestApplication({
             module(testing = true)
+
+            // setup
+            transaction {
+                Questionnaires.deleteAll()
+            }
         }) {
             handleRequest(HttpMethod.Get, "/fragebogen/$letterId").apply {
 

@@ -19,13 +19,6 @@ import org.junit.Test
 
 class CollectionRouteTest {
 
-    @Before
-    fun setup() {
-        transaction {
-            Questionnaires.deleteAll()
-        }
-    }
-
     @Test
     fun testSingle() {
         withTestApplication({
@@ -33,6 +26,7 @@ class CollectionRouteTest {
 
             // setup
             transaction {
+                Questionnaires.deleteAll()
                 Questionnaire.new(123) {
                     name = "test"
                     state = QuestionnaireState.OPEN
@@ -102,6 +96,11 @@ class CollectionRouteTest {
     fun testNew() {
         withTestApplication({
             module(testing = true)
+
+            // setup
+            transaction {
+                Questionnaires.deleteAll()
+            }
         }) {
             handleRequest(HttpMethod.Post, "/fragebogen").apply {
 
