@@ -11,35 +11,12 @@ import kotlin.test.Test
 class ApplicationTest {
 
     @Test
-    fun testRoot() {
+    fun testAppStarts() {
         withTestApplication({ module(testing = true) }) {
-            handleRequest(HttpMethod.Get, "/").apply {
+            handleRequest(HttpMethod.Head, "/").apply {
 
                 assertThat(response.status()).isEqualTo(HttpStatusCode.OK)
 
-                assertThat(response.content).isEqualToIgnoringWhitespaces("""
-                    {
-                        "_schema": {
-                            "links": [
-                                {
-                                    "rel": "self",
-                                    "href": "/",
-                                    "method": "GET"
-                                },
-                                {
-                                    "rel": "create",
-                                    "href": "/fragebogen",
-                                    "method": "POST"
-                                },
-                                {
-                                    "rel": "get-by-id",
-                                    "href": "/fragebogen/{id}",
-                                    "method": "GET"
-                                }
-                            ]
-                        }
-                    }
-                """.trimIndent())
             }
         }
     }

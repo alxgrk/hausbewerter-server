@@ -1,4 +1,4 @@
-package de.alxgrk.models.schema
+package de.alxgrk.models.web.schema
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 

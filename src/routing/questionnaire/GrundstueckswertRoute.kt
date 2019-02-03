@@ -1,8 +1,8 @@
 package routing.questionnaire
 
-import de.alxgrk.models.schema.Definitions.GRUNDSTUECKSWERT_BODY
-import de.alxgrk.models.schema.Definitions.MARKTANPASSUNGSFAKTOR_BODY
-import de.alxgrk.models.schema.DocumentationRef
+import de.alxgrk.models.web.schema.Definitions.GRUNDSTUECKSWERT_BODY
+import de.alxgrk.models.web.schema.Definitions.MARKTANPASSUNGSFAKTOR_BODY
+import de.alxgrk.models.web.schema.DocumentationRef
 import de.alxgrk.routing.Routes.GRUNDSTUECKSWERT
 import de.alxgrk.routing.Routes.MARKTANPASSUNGSFAKTOR
 import de.alxgrk.routing.prev

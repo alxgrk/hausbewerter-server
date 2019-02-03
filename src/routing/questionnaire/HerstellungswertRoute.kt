@@ -1,7 +1,7 @@
 package routing.questionnaire
 
-import de.alxgrk.models.schema.Definitions.*
-import de.alxgrk.models.schema.DocumentationRef
+import de.alxgrk.models.web.schema.Definitions.*
+import de.alxgrk.models.web.schema.DocumentationRef
 import de.alxgrk.routing.Routes.*
 import de.alxgrk.routing.next
 import de.alxgrk.routing.prev
