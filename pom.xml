@@ -15,6 +15,8 @@
         <h2_version>1.4.197</h2_version>
         <assertj_version>0.13</assertj_version>
         <kodein_version>6.0.1</kodein_version>
+        <mockito_version>2.0.2-beta</mockito_version>
+        <kotlin_mockito_version>2.1.0</kotlin_mockito_version>
 
         <kotlin.code.style>official</kotlin.code.style>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -85,6 +87,18 @@
             <groupId>com.willowtreeapps.assertk</groupId>
             <artifactId>assertk-jvm</artifactId>
             <version>${assertj_version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito_version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nhaarman.mockitokotlin2</groupId>
+            <artifactId>mockito-kotlin</artifactId>
+            <version>${kotlin_mockito_version}</version>
         </dependency>
 
     </dependencies>

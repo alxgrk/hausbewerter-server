@@ -11,7 +11,7 @@ import io.ktor.server.testing.withTestApplication
 import org.junit.Test
 
 
-class RouteRouteTest {
+class RouteRouteTest : AbstractRoutingTest() {
 
     @Test
     fun testRoot() {

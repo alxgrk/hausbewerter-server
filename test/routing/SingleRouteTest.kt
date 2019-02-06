@@ -17,7 +17,7 @@ import org.junit.Before
 import org.junit.Test
 
 
-class SingleRouteTest {
+class SingleRouteTest : AbstractRoutingTest() {
 
     private val id = 123
 
@@ -28,7 +28,6 @@ class SingleRouteTest {
 
             // setup
             transaction {
-                Questionnaires.deleteAll()
                 Questionnaire.new(id) {
                     name = "test"
                     state = QuestionnaireState.OPEN
@@ -73,14 +72,7 @@ class SingleRouteTest {
     @Test
     fun testNotFound() {
 
-        withTestApplication({
-            module(testing = true)
-
-            // setup
-            transaction {
-                Questionnaires.deleteAll()
-            }
-        }) {
+        withTestApplication({ module(testing = true) }) {
             handleRequest(HttpMethod.Get, "/fragebogen/$id").apply {
 
                 assertThat(response.status()).isEqualTo(HttpStatusCode.NotFound)
@@ -100,14 +92,7 @@ class SingleRouteTest {
     fun testNoNumber() {
         val letterId = "abc"
 
-        withTestApplication({
-            module(testing = true)
-
-            // setup
-            transaction {
-                Questionnaires.deleteAll()
-            }
-        }) {
+        withTestApplication({ module(testing = true) }) {
             handleRequest(HttpMethod.Get, "/fragebogen/$letterId").apply {
 
                 assertThat(response.status()).isEqualTo(HttpStatusCode.NotFound)

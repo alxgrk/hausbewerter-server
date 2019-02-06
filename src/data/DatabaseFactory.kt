@@ -1,5 +1,6 @@
 package data
 
+import models.table.BesonderesTable
 import models.table.Questionnaires
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils.create
@@ -22,8 +23,7 @@ object DatabaseFactory {
             addLogger(StdOutSqlLogger)
 
             // create tables
-            create(Questionnaires)
-
+            create(Questionnaires, BesonderesTable)
         }
     }
 

@@ -5,7 +5,7 @@ import de.alxgrk.models.web.schema.Definitions.FLAECHE_BODY
 import de.alxgrk.models.web.schema.DocumentationRef
 import de.alxgrk.routing.Routes.FLAECHE
 import de.alxgrk.routing.Routes.SINGLE
-import de.alxgrk.routing.error.NotFoundException
+import de.alxgrk.routing.util.idIfExists
 import io.ktor.application.call
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -16,21 +16,17 @@ fun Routing.single(repo: QuestionnaireRepository) {
 
     route(SINGLE) {
 
-        val idInQuestion = call.parameters["id"]!! // can't be null here
-
-        val qById = transaction {
-            repo.getOne(idInQuestion.toIntOrNull() ?: throw NotFoundException("Questionnaires with ID '$idInQuestion' not found."))
-        }
-        val realId = qById.id.toString()
+        val id = idIfExists(repo)
+        val qById = transaction { repo.getOne(id) }
 
         call.respond(
             mapOf(
-                "id" to realId,
+                "id" to id.toString(),
                 "name" to qById.name,
                 "state" to qById.state,
                 schema {
-                    add(self(SINGLE, realId))
-                    add(next(FLAECHE, realId, DocumentationRef(FLAECHE_BODY)))
+                    add(self(SINGLE, id.toString()))
+                    add(next(FLAECHE, id.toString(), DocumentationRef(FLAECHE_BODY)))
                 }
             )
         )

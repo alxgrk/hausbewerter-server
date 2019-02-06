@@ -17,7 +17,7 @@ import org.junit.Before
 import org.junit.Test
 
 
-class CollectionRouteTest {
+class CollectionRouteTest : AbstractRoutingTest() {
 
     @Test
     fun testSingle() {
@@ -26,7 +26,6 @@ class CollectionRouteTest {
 
             // setup
             transaction {
-                Questionnaires.deleteAll()
                 Questionnaire.new(123) {
                     name = "test"
                     state = QuestionnaireState.OPEN
@@ -94,14 +93,7 @@ class CollectionRouteTest {
 
     @Test
     fun testNew() {
-        withTestApplication({
-            module(testing = true)
-
-            // setup
-            transaction {
-                Questionnaires.deleteAll()
-            }
-        }) {
+        withTestApplication({ module(testing = true) }) {
             handleRequest(HttpMethod.Post, "/fragebogen").apply {
 
                 assertThat(response.status()).isEqualTo(HttpStatusCode.OK)
