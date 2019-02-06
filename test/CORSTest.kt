@@ -46,7 +46,7 @@ class CORSTest {
     }
 
     @Test
-    fun testPreFlight() {
+    fun testLocalPreFlight() {
         withTestApplication({ module(testing = true) }) {
             handleRequest(HttpMethod.Options, "/") {
                 addHeader(HttpHeaders.Origin, "http://localhost:8088")
@@ -54,6 +54,31 @@ class CORSTest {
             }.let { call ->
                 assertEquals(HttpStatusCode.OK, call.response.status())
                 assertEquals("http://localhost:8088", call.response.headers[HttpHeaders.AccessControlAllowOrigin])
+            }
+        }
+    }
+
+    @Test
+    fun testRemoteFrontendRequest() {
+        withTestApplication({ module(testing = true) }) {
+            handleRequest(HttpMethod.Get, "/") {
+                addHeader(HttpHeaders.Origin, "https://alxgrk.github.io")
+            }.let { call ->
+                assertEquals(HttpStatusCode.OK, call.response.status())
+                assertEquals("https://alxgrk.github.io", call.response.headers[HttpHeaders.AccessControlAllowOrigin])
+            }
+        }
+    }
+
+    @Test
+    fun testRemotePreFlight() {
+        withTestApplication({ module(testing = true) }) {
+            handleRequest(HttpMethod.Options, "/") {
+                addHeader(HttpHeaders.Origin, "https://alxgrk.github.io")
+                addHeader(HttpHeaders.AccessControlRequestMethod, "GET")
+            }.let { call ->
+                assertEquals(HttpStatusCode.OK, call.response.status())
+                assertEquals("https://alxgrk.github.io", call.response.headers[HttpHeaders.AccessControlAllowOrigin])
             }
         }
     }

@@ -64,7 +64,7 @@ private fun Application.features() {
 
     install(CORS) {
         host("localhost:8088")
-        host("alxgrk.github.io")
+        host("alxgrk.github.io", schemes = listOf("https"))
 
         method(HttpMethod.Put)
 
