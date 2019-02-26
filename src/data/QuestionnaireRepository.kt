@@ -17,6 +17,8 @@ import org.jetbrains.exposed.sql.EqOp
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.intLiteral
 import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 import java.util.*
 
 interface QuestionnaireRepository {
@@ -142,7 +144,8 @@ class DaoQuestionnaireRepo : QuestionnaireRepository {
             this.restnutzungsdauer = gesamtnutzungsdauer - currentNutzungsdauer
 
             val alterswertminderungAsPercentage =
-                currentNutzungsdauer.toBigDecimal().divide(gesamtnutzungsdauer.toBigDecimal())
+                currentNutzungsdauer.toBigDecimal()
+                    .divide(gesamtnutzungsdauer.toBigDecimal(), 5, RoundingMode.HALF_EVEN)
 
             if (this.herstellungswert == null)
                 throw PreviousQuestionnaireStepMissingException(

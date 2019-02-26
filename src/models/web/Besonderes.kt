@@ -3,7 +3,7 @@ package models.web
 import java.math.BigDecimal
 
 data class Besonderes (
-    val sachwerte: List<BesonderesSachwerte>
+    val sachwerte: List<BesonderesSachwerte>?
 )
 
 data class BesonderesSachwerte (

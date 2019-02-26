@@ -22,6 +22,8 @@ fun Routing.sachwert(repo: QuestionnaireRepository) {
 
     route(SACHWERT) {
 
+        // FIXME somethings wrong with the payload
+
         val (baujahr, sanierungen) = call.receive<SachwertBody>()
 
         val id = idIfExists(repo)

@@ -25,7 +25,8 @@ fun Routing.besonderes(repo: QuestionnaireRepository) {
 
         val id = idIfExists(repo)
         val vorlaeufigerSachwert = transaction {
-            repo.calculateBesonderes(id, besonderes.sachwerte.map { b -> b.name to b.wert })
+            repo.calculateBesonderes(id,
+                besonderes.sachwerte?.map { b -> b.name to b.wert } ?: emptyList())
         }
 
         call.respond(
