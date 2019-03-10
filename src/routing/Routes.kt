@@ -1,6 +1,6 @@
 package de.alxgrk.routing
 
-import de.alxgrk.models.schema.Rel
+import de.alxgrk.models.web.schema.Rel
 import io.ktor.application.ApplicationCall
 import io.ktor.routing.*
 import io.ktor.util.pipeline.PipelineInterceptor
@@ -37,6 +37,7 @@ fun self(route: Routes, id: String = "", targetSchema: Any? = null) = LinkObject
     targetSchema = targetSchema
 )
 fun create() = LinkObject(relType = Rel.CREATE, href = Routes.NEW.path(), method = Routes.NEW.method)
+fun all() = LinkObject(relType = Rel.ALL, href = Routes.ALL.path(), method = Routes.ALL.method)
 fun getById() =
     LinkObject(relType = Rel.GET_BY_ID, href = Routes.SINGLE.path(), method = Routes.SINGLE.method)
 fun next(route: Routes, id: String, targetSchema: Any? = null) = LinkObject(

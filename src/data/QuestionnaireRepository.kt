@@ -20,6 +20,7 @@ import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
 import java.util.*
+import kotlin.random.Random
 
 interface QuestionnaireRepository {
 
@@ -61,7 +62,7 @@ class DaoQuestionnaireRepo : QuestionnaireRepository {
     override fun getOne(id: Int) = Questionnaire[id]
 
     override fun create() = Questionnaire.new {
-        name = UUID.randomUUID().toString()
+        name = "Test" // FIXME
         state = QuestionnaireState.OPEN
     }
 

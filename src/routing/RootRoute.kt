@@ -15,6 +15,7 @@ fun Routing.root() {
                 schema {
                     add(self(ROOT))
                     add(create())
+                    add(all())
                     add(getById())
                 }
             )
