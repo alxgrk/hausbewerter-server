@@ -11,7 +11,7 @@ import io.ktor.server.testing.withTestApplication
 import org.junit.Test
 
 
-class RouteRouteTest : AbstractRoutingTest() {
+class RootRouteTest : AbstractRoutingTest() {
 
     @Test
     fun testRoot() {
@@ -33,6 +33,11 @@ class RouteRouteTest : AbstractRoutingTest() {
                                     "rel": "create",
                                     "href": "/fragebogen",
                                     "method": "POST"
+                                },
+                                {
+                                  "rel" : "all",
+                                  "href" : "/fragebogen",
+                                  "method" : "GET"
                                 },
                                 {
                                     "rel": "get-by-id",
