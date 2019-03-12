@@ -41,6 +41,7 @@ object Questionnaires : IntIdTable() {
     val vorlaeufigerSachwertMitBesonderem = decimal("vorlaeufigerSachwertMitBesonderem", 19, 5).nullable()
 
     // marktanpassungsfaktor
+    val marktanpassungsfaktor = decimal("marktanpassungsfaktor", 19, 5).nullable()
     val vorlaeufigerSachwertMitMarktanpassungsfaktor =
         decimal("vorlaeufigerSachwertMitMarktanpassungsfaktor", 19, 5).nullable()
 

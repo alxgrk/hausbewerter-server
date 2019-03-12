@@ -42,6 +42,7 @@ class Questionnaire(id: EntityID<Int>) : IntEntity(id) {
     val besonderes by Besonderes referrersOn BesonderesTable.questionnaire
     var vorlaeufigerSachwertMitBesonderem by Questionnaires.vorlaeufigerSachwertMitBesonderem
 
+    var marktanpassungsfaktor by Questionnaires.marktanpassungsfaktor
     var vorlaeufigerSachwertMitMarktanpassungsfaktor by Questionnaires.vorlaeufigerSachwertMitMarktanpassungsfaktor
 
     var grundstuecksgroesse by Questionnaires.grundstuecksgroesse

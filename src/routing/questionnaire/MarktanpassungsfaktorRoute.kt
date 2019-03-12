@@ -1,6 +1,7 @@
 package routing.questionnaire
 
 import de.alxgrk.data.QuestionnaireRepository
+import de.alxgrk.models.web.mapping.toDto
 import de.alxgrk.models.web.schema.Definitions.*
 import de.alxgrk.models.web.schema.DocumentationRef
 import de.alxgrk.routing.Routes.*
@@ -13,8 +14,7 @@ import io.ktor.application.call
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
-import models.web.MarktanpassungsfaktorBody
-import models.web.schema
+import models.web.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Routing.marktanpassungsfaktor(repo: QuestionnaireRepository) {
@@ -24,6 +24,12 @@ fun Routing.marktanpassungsfaktor(repo: QuestionnaireRepository) {
         val (marktanpassungsfaktor) = call.receive<MarktanpassungsfaktorBody>()
 
         val id = idIfExists(repo)
+
+        val formerQuestionnaire = transaction { repo.getOne(id) }
+        val formerMarktanpassungsfaktorBody = formerQuestionnaire.toDto<MarktanpassungsfaktorBody>()
+        val formerGrundstueckswertBody = formerQuestionnaire.toDto<GrundstueckswertBody>()
+        val formerBesonderesBody = formerQuestionnaire.toDto<BesonderesBody>()
+
         val vorlaeufigerSachwert = transaction {
             repo.calculateMarktanpassungsfaktor(id, marktanpassungsfaktor)
         }
@@ -32,9 +38,12 @@ fun Routing.marktanpassungsfaktor(repo: QuestionnaireRepository) {
             mapOf(
                 "vorlaeufigerSachwert" to vorlaeufigerSachwert,
                 schema {
-                    add(self(MARKTANPASSUNGSFAKTOR, id.toString(), DocumentationRef(MARKTANPASSUNGSFAKTOR_BODY)))
-                    add(next(GRUNDSTUECKSWERT, id.toString(), DocumentationRef(GRUNDSTUECKSWERT_BODY)))
-                    add(prev(BESONDERES, id.toString(), DocumentationRef(BESONDERES_BODY)))
+                    add(self(MARKTANPASSUNGSFAKTOR, id.toString(),
+                        DocumentationRef(MARKTANPASSUNGSFAKTOR_BODY), formerMarktanpassungsfaktorBody))
+                    add(next(GRUNDSTUECKSWERT, id.toString(),
+                        DocumentationRef(GRUNDSTUECKSWERT_BODY), formerGrundstueckswertBody))
+                    add(prev(BESONDERES, id.toString(),
+                        DocumentationRef(BESONDERES_BODY), formerBesonderesBody))
                 }
             )
         )

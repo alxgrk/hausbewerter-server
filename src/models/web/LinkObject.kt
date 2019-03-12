@@ -9,5 +9,6 @@ data class LinkObject (
     val rel: String = relType.toString(),
     val href: String,
     val method: Method = Method.GET,
-    val targetSchema: Any? = null
+    val targetSchema: Any? = null,
+    val formerData: Any? = null
 )

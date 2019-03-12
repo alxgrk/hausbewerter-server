@@ -30,27 +30,30 @@ enum class Routes(private val path: String, val method: Method) {
 
 }
 
-fun self(route: Routes, id: String = "", targetSchema: Any? = null) = LinkObject(
+fun self(route: Routes, id: String = "", targetSchema: Any? = null, formerData: Any? = null) = LinkObject(
     relType = Rel.SELF,
     href = route.path(id),
     method = route.method,
-    targetSchema = targetSchema
+    targetSchema = targetSchema,
+    formerData = formerData
 )
 fun create() = LinkObject(relType = Rel.CREATE, href = Routes.NEW.path(), method = Routes.NEW.method)
 fun all() = LinkObject(relType = Rel.ALL, href = Routes.ALL.path(), method = Routes.ALL.method)
 fun getById() =
     LinkObject(relType = Rel.GET_BY_ID, href = Routes.SINGLE.path(), method = Routes.SINGLE.method)
-fun next(route: Routes, id: String, targetSchema: Any? = null) = LinkObject(
+fun next(route: Routes, id: String, targetSchema: Any? = null, formerData: Any? = null) = LinkObject(
     relType = Rel.NEXT,
     href = route.path(id),
     method = route.method,
-    targetSchema = targetSchema
+    targetSchema = targetSchema,
+    formerData = formerData
 )
-fun prev(route: Routes, id: String, targetSchema: Any? = null) = LinkObject(
+fun prev(route: Routes, id: String, targetSchema: Any? = null, formerData: Any? = null) = LinkObject(
     relType = Rel.PREV,
     href = route.path(id),
     method = route.method,
-    targetSchema = targetSchema
+    targetSchema = targetSchema,
+    formerData = formerData
 )
 
 fun Routing.route(route: Routes, id: String = "", body: PipelineInterceptor<Unit, ApplicationCall>) = when(route.method) {

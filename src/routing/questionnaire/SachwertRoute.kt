@@ -1,6 +1,7 @@
 package routing.questionnaire
 
 import de.alxgrk.data.QuestionnaireRepository
+import de.alxgrk.models.web.mapping.toDto
 import de.alxgrk.models.web.schema.Definitions.*
 import de.alxgrk.models.web.schema.DocumentationRef
 import de.alxgrk.routing.Routes.*
@@ -13,9 +14,7 @@ import io.ktor.application.call
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
-import models.web.SachwertBody
-import models.web.schema
-import models.web.toDbEntity
+import models.web.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Routing.sachwert(repo: QuestionnaireRepository) {
@@ -27,6 +26,12 @@ fun Routing.sachwert(repo: QuestionnaireRepository) {
         val (baujahr, sanierungen) = call.receive<SachwertBody>()
 
         val id = idIfExists(repo)
+
+        val formerQuestionnaire = transaction { repo.getOne(id) }
+        val formerSachwertBody = formerQuestionnaire.toDto<SachwertBody>()
+        val formerBesonderesBody = formerQuestionnaire.toDto<BesonderesBody>()
+        val formerHerstellungswertBody = formerQuestionnaire.toDto<HerstellungswertBody>()
+
         val (errechnetesBaujahr, restnutzungsdauer, vorlaeufigerSachwert) = transaction {
             repo.calculateSachwert(id, baujahr, sanierungen.toDbEntity())
         }
@@ -37,9 +42,12 @@ fun Routing.sachwert(repo: QuestionnaireRepository) {
                 "restnutzungsdauer" to restnutzungsdauer,
                 "vorlaeufigerSachwert" to vorlaeufigerSachwert,
                 schema {
-                    add(self(SACHWERT, id.toString(), DocumentationRef(SACHWERT_BODY)))
-                    add(next(BESONDERES, id.toString(), DocumentationRef(BESONDERES_BODY)))
-                    add(prev(HERSTELLUNGSWERT, id.toString(), DocumentationRef(HERSTELLUNGSWERT_BODY)))
+                    add(self(SACHWERT, id.toString(),
+                        DocumentationRef(SACHWERT_BODY), formerSachwertBody))
+                    add(next(BESONDERES, id.toString(),
+                        DocumentationRef(BESONDERES_BODY), formerBesonderesBody))
+                    add(prev(HERSTELLUNGSWERT, id.toString(),
+                        DocumentationRef(HERSTELLUNGSWERT_BODY), formerHerstellungswertBody))
                 }
             )
         )

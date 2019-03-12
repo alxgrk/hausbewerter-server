@@ -6,6 +6,7 @@ import de.alxgrk.models.calculation.nutzungsdauerNachStandardstufe
 import de.alxgrk.models.entity.Besonderes
 import de.alxgrk.models.entity.Questionnaire
 import de.alxgrk.models.entity.Sanierungen
+import de.alxgrk.models.web.mapping.toDbEntity
 import de.alxgrk.routing.Routes
 import de.alxgrk.routing.error.PreviousQuestionnaireStepMissingException
 import de.alxgrk.routing.error.UnsupportedStandardstufeException
@@ -189,6 +190,8 @@ class DaoQuestionnaireRepo : QuestionnaireRepository {
 
     override fun calculateMarktanpassungsfaktor(id: Int, marktanpassungsfaktor: BigDecimal): BigDecimal =
         Questionnaire[id].run {
+            this.marktanpassungsfaktor = marktanpassungsfaktor
+
             if (this.vorlaeufigerSachwertMitBesonderem == null)
                 throw PreviousQuestionnaireStepMissingException(
                     "Nächster Schritt kann nicht berechnet werden, die Besonderheiten des Hauses wurden noch nicht berücksichtigt.",

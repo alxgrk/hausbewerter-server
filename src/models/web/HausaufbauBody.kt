@@ -1,12 +1,12 @@
 package models.web
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import models.table.Art
-import models.table.Dach
-import models.table.Geschosse
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import models.web.mapping.HausaufbauBodyDeserializer
+import models.web.mapping.HausaufbauBodySerializer
 
 @JsonDeserialize(using = HausaufbauBodyDeserializer::class)
+@JsonSerialize(using = HausaufbauBodySerializer::class)
 data class HausaufbauBody(
     val geschosse: Geschosse,
     val dach: Dach,
@@ -68,24 +68,3 @@ data class HausaufbauBody(
 }
 
 class HausaufbauException(message: String) : RuntimeException(message)
-
-fun HausaufbauBody.Geschosse.toDbEntity() = when (this) {
-    HausaufbauBody.Geschosse.KG_EG -> Geschosse.KG_EG
-    HausaufbauBody.Geschosse.KG_EG_OG -> Geschosse.KG_EG_OG
-    HausaufbauBody.Geschosse.EG -> Geschosse.EG
-    HausaufbauBody.Geschosse.EG_OG -> Geschosse.EG_OG
-}
-
-fun HausaufbauBody.Dach.toDbEntity() = when (this) {
-    HausaufbauBody.Dach.AUSGEBAUT -> Dach.AUSGEBAUT
-    HausaufbauBody.Dach.NICHT_AUSGEBAUT -> Dach.NICHT_AUSGEBAUT
-    HausaufbauBody.Dach.FLACH -> Dach.FLACH
-}
-
-fun HausaufbauBody.Art.toDbEntity() = when (this) {
-    HausaufbauBody.Art.EIN -> Art.EIN
-    HausaufbauBody.Art.DOPPEL -> Art.DOPPEL
-    HausaufbauBody.Art.REIHE -> Art.REIHE
-    HausaufbauBody.Art.REIHENEND -> Art.REIHENEND
-    HausaufbauBody.Art.REIHENMITTEL -> Art.REIHENMITTEL
-}

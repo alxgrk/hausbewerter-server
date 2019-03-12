@@ -1,6 +1,7 @@
 package routing.questionnaire
 
 import de.alxgrk.data.QuestionnaireRepository
+import de.alxgrk.models.web.mapping.toDto
 import de.alxgrk.models.web.schema.Definitions.GRUNDSTUECKSWERT_BODY
 import de.alxgrk.models.web.schema.Definitions.MARKTANPASSUNGSFAKTOR_BODY
 import de.alxgrk.models.web.schema.DocumentationRef
@@ -14,8 +15,7 @@ import io.ktor.application.call
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Routing
-import models.web.GrundstueckswertBody
-import models.web.schema
+import models.web.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Routing.grundstueckswert(repo: QuestionnaireRepository) {
@@ -25,6 +25,11 @@ fun Routing.grundstueckswert(repo: QuestionnaireRepository) {
         val (grundstuecksgroesse) = call.receive<GrundstueckswertBody>()
 
         val id = idIfExists(repo)
+
+        val formerQuestionnaire = transaction { repo.getOne(id) }
+        val formerGrundstueckswertBody = formerQuestionnaire.toDto<GrundstueckswertBody>()
+        val formerMarktanpassungsfaktorBody = formerQuestionnaire.toDto<MarktanpassungsfaktorBody>()
+
         val gesamtwert = transaction {
             repo.calculateGrundstuecksgroesse(id, grundstuecksgroesse)
         }
@@ -32,8 +37,10 @@ fun Routing.grundstueckswert(repo: QuestionnaireRepository) {
             mapOf(
                 "gesamtwert" to gesamtwert,
                 schema {
-                    add(self(GRUNDSTUECKSWERT, id.toString(), DocumentationRef(GRUNDSTUECKSWERT_BODY)))
-                    add(prev(MARKTANPASSUNGSFAKTOR, id.toString(), DocumentationRef(MARKTANPASSUNGSFAKTOR_BODY)))
+                    add(self(GRUNDSTUECKSWERT, id.toString(),
+                        DocumentationRef(GRUNDSTUECKSWERT_BODY), formerGrundstueckswertBody))
+                    add(prev(MARKTANPASSUNGSFAKTOR, id.toString(),
+                        DocumentationRef(MARKTANPASSUNGSFAKTOR_BODY), formerMarktanpassungsfaktorBody))
                 }
             )
         )
