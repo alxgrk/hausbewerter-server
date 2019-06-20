@@ -222,6 +222,7 @@ class DaoQuestionnaireRepo : QuestionnaireRepository {
             this.grundstueckswert = this.grundstuecksgroesse!!.multiply(abweichenderBodenrichtwert.toBigDecimal())
 
             this.gesamtwert = this.vorlaeufigerSachwertMitMarktanpassungsfaktor!!.add(this.grundstueckswert!!)
+            this.state = QuestionnaireState.FINISHED
 
             return@run this.gesamtwert!!
         }

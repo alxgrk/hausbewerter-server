@@ -27,6 +27,7 @@ fun Routing.single(repo: QuestionnaireRepository) {
                 "id" to id.toString(),
                 "name" to qById.name,
                 "state" to qById.state,
+                "gesamtwert" to qById.gesamtwert,
                 schema {
                     add(self(SINGLE, id.toString()))
                     add(next(FLAECHE, id.toString(),
